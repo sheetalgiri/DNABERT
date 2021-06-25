@@ -17,7 +17,7 @@
 try:
     from scipy.stats import pearsonr, spearmanr
     import numpy as np
-    from sklearn.metrics import matthews_corrcoef, precision_score, recall_score, f1_score, roc_auc_score, average_precision_score
+    from sklearn.metrics import matthews_corrcoef, precision_score, recall_score, f1_score, roc_auc_score, average_precision_score,mean_squared_error
 
     _has_sklearn = True
 except (AttributeError, ImportError):
@@ -95,6 +95,17 @@ if _has_sklearn:
             "corr": (pearson_corr + spearman_corr) / 2,
         }
 
+    def regression_metrics(preds, labels):
+        pearson_corr = pearsonr(preds, labels)[0]
+        spearman_corr = spearmanr(preds, labels)[0]
+        mse = mean_squared_error(labels,preds)[0]
+        return {
+            "mse":mse,
+            "pearson": pearson_corr,
+            "spearmanr": spearman_corr,
+            "corr": (pearson_corr + spearman_corr) / 2,
+        }
+
     def glue_compute_metrics(task_name, preds, labels, probs=None):
         assert len(preds) == len(labels)
         if task_name == "cola":
@@ -112,6 +123,8 @@ if _has_sklearn:
             return acc_and_f1(preds, labels)
         elif task_name == "sts-b":
             return pearson_and_spearman(preds, labels)
+        elif task_name == "ptr":
+            return regression_metrics(preds, labels)
         elif task_name == "qqp":
             return acc_and_f1(preds, labels)
         elif task_name == "mnli":

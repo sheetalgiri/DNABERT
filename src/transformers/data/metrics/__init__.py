@@ -98,9 +98,9 @@ if _has_sklearn:
     def regression_metrics(preds, labels):
         pearson_corr = pearsonr(preds, labels)[0]
         spearman_corr = spearmanr(preds, labels)[0]
-        mse = mean_squared_error(labels,preds)[0]
+        rmse = mean_squared_error(labels,preds,squared=True)
         return {
-            "mse":mse,
+            "rmse":rmse,
             "pearson": pearson_corr,
             "spearmanr": spearman_corr,
             "corr": (pearson_corr + spearman_corr) / 2,

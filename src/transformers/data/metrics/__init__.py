@@ -125,6 +125,8 @@ if _has_sklearn:
             return pearson_and_spearman(preds, labels)
         elif task_name == "ptr":
             return regression_metrics(preds, labels)
+        elif task_name == "ptr-classification":
+            return acc_f1_mcc_auc_pre_rec(preds, labels, probs)
         elif task_name == "qqp":
             return acc_and_f1(preds, labels)
         elif task_name == "mnli":
